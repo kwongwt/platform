@@ -1,4 +1,4 @@
-package com.kwong.boot.system;
+package com.kwong.boot.system.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.kwong.boot.system;
+package com.kwong.boot.system.controller;
 
 import com.kwong.base.tips.SuccessTip;
 

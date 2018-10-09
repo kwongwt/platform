@@ -1,21 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <title>登陆页</title>
-<link rel="stylesheet" href="../plugins/layui/css/layui.css">
-<link rel="stylesheet" href="../base/login/login.css">
+<link rel="stylesheet" type="text/css" th:href="@{/static/plugins/layui/css/layui.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/static/base/login/login.css}">
+<link th:replace="base::html">
+<script>
+	seajs.use("/static/base/login/login.js")
+</script>
 </head>
-<body>
+<body>  
 	<div id="warp">
-		<div class="layui-col-md6">
-			<div class="layui-card">
-				<div class="layui-card-header">卡片面板</div>
-				<div class="layui-card-body">
-					卡片式面板面板通常用于非白色背景色的主体内<br> 从而映衬出边框投影
-				</div>
+		<div class="layui-card">
+			<div class="layui-card-header">登陆系统</div>
+			<div class="layui-card-body">
+				<form id="login-form" class="layui-form" action="/login" method="post">
+					<div class="layui-form-item">
+						<label>账号</label>
+						<input type="text" name="username" autocomplete="off" placeholder="请输入账号" class="layui-input">
+					</div>
+					<div class="layui-form-item">
+						<label>密码</label>
+						<input type="password" name="password" autocomplete="off" placeholder="请输入密码" class="layui-input">
+					</div>
+					<div class="layui-form-item">
+					   <label>记住我</label>
+					   <input type="checkbox" name="rememberMe" title="写作">
+					</div>
+					<div class="layui-form-item">
+						<button class="layui-btn" lay-submit="">确认登陆</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </body>
+</html>
