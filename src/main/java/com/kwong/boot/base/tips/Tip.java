@@ -1,4 +1,4 @@
-package com.kwong.base.tips;
+package com.kwong.boot.base.tips;
 
 /**
  * @Description: tips抽象类，用于返回给前台的提示

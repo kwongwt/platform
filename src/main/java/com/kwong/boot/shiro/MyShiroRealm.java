@@ -34,18 +34,19 @@ public class MyShiroRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
 		System.out.println("身份认证方法：MyShiroRealm.doGetAuthenticationInfo()");
-		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;;
+		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 		User user = null;
 		// 从数据库获取对应用户名密码的用户
-		List<User> userList = userRepository.findByUsernameAndPassword(token.getUsername(),token.getPassword().toString());
+		List<User> userList = userRepository.findByUsernameAndPassword(token.getUsername(),String.valueOf(token.getPassword()));
 		if(userList.size()!=0){
 			user = userList.get(0);
 		}
 		if (null == user) {
 			throw new AccountException("帐号或密码不正确！");
-		}else if(user.getStatus().equals(1)){
+		}else if(!user.getStatus().equals(1)){
 			throw new DisabledAccountException("帐号已经禁止登录！");
 		}else{
+			System.err.println("登陆成功");
 			//更新登录时间 last login time
 			user.setLastLoginTime(new Date());
 			userRepository.save(user);
@@ -84,7 +85,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 		Set<String> permissionSet = new HashSet<String>();
 		permissionSet.add("权限添加");
 		info.setStringPermissions(permissionSet);
-	       return info;
+	    return info;
 	}
 
 }

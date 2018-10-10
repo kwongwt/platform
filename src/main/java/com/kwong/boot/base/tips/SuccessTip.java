@@ -1,4 +1,4 @@
-package com.kwong.base.tips;
+package com.kwong.boot.base.tips;
 
 /**
  * @Description: 请求成功提示

@@ -1,5 +1,7 @@
 package com.kwong.boot;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,8 @@ public class KwongBootApplicationTests {
 	
 	@Test
 	public void contextLoads() {
-		User user = userRepository.findByUsername("root");
-		System.err.println(user.toString());
+		List<User> list = userRepository.findByUsernameAndPassword("root", "96e79218965eb72c92a549dd5a330112");
+		System.err.println(list);
 	}
 
 }
