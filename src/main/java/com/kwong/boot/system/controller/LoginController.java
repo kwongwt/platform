@@ -56,7 +56,6 @@ public class LoginController extends BaseController {
 		String username = super.getPara("username").trim();
         String password = super.getPara("password").trim();
         Boolean rememberMe = Boolean.valueOf(super.getPara("rememberMe"));
-        
         Subject currentUser = ShiroKit.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password.toCharArray());
         if (rememberMe) {
@@ -66,7 +65,7 @@ public class LoginController extends BaseController {
         }
         currentUser.login(token);
         
-        return REDIRECT + "/index";
+        return REDIRECT + "/";
 	}
 	
 	/**

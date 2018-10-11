@@ -26,6 +26,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.apache.tomcat.util.bcel.Const;
 
+import com.alibaba.fastjson.JSON;
 import com.kwong.boot.base.util.ToolUtil;
 
 /**

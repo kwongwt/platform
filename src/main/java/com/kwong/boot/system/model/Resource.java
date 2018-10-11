@@ -27,7 +27,7 @@ public class Resource extends Entitys implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	/**
 	 * 名称
 	 */
@@ -88,11 +88,11 @@ public class Resource extends Entitys implements Serializable {
     @JoinTable(name = "sys_link_role_resource", joinColumns = { @JoinColumn(name = "resource_id") }, inverseJoinColumns ={@JoinColumn(name = "role_id") })
     private List<Role> roleList;
     
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

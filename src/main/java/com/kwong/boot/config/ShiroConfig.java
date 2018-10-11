@@ -1,9 +1,10 @@
-package com.kwong.boot.config.web;
+package com.kwong.boot.config;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -16,7 +17,7 @@ import org.apache.shiro.web.servlet.ShiroHttpSession;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,31 +30,13 @@ public class ShiroConfig {
      * 安全管理器
      */
     @Bean
-    public DefaultWebSecurityManager securityManager(CookieRememberMeManager rememberMeManager,SessionManager sessionManager){
-        DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
+    public DefaultWebSecurityManager securityManager(CookieRememberMeManager rememberMeManager,CacheManager cacheShiroManager, SessionManager sessionManager){
+    	DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
         securityManager.setRealm(this.myShiroRealm());
+        securityManager.setCacheManager(cacheShiroManager);
         securityManager.setRememberMeManager(rememberMeManager);
         securityManager.setSessionManager(sessionManager);
         return securityManager;
-    }
-    
-    /**
-     * 项目自定义session管理器(单机环境)
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = "kwong", name = "spring-session-open", havingValue = "false")
-    public DefaultWebSessionManager defaultWebSessionManager(CacheManager cacheShiroManager) {
-        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setCacheManager(cacheShiroManager);
-        sessionManager.setSessionValidationInterval(15 * 60 * 1000);//验证失效时间15分钟
-        sessionManager.setGlobalSessionTimeout(30 * 60 * 1000);//session失效时间15分钟
-        sessionManager.setDeleteInvalidSessions(true);
-        sessionManager.setSessionValidationSchedulerEnabled(true);
-        Cookie cookie = new SimpleCookie(ShiroHttpSession.DEFAULT_SESSION_ID_NAME);
-        cookie.setName("shiroCookie");
-        cookie.setHttpOnly(true);
-        sessionManager.setSessionIdCookie(cookie);
-        return sessionManager;
     }
     
     /**
@@ -65,12 +48,22 @@ public class ShiroConfig {
     }
     
     /**
+     * 缓存管理器 使用Ehcache实现
+     */
+    @Bean
+    public CacheManager getCacheShiroManager(EhCacheManagerFactoryBean ehcache) {
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        ehCacheManager.setCacheManager(ehcache.getObject());
+        return ehCacheManager;
+    }
+    
+    /**
      * rememberMe管理器, cipherKey生成见{@code Base64Test.java}
      */
     @Bean
     public CookieRememberMeManager rememberMeManager(SimpleCookie rememberMeCookie) {
         CookieRememberMeManager manager = new CookieRememberMeManager();
-        manager.setCipherKey(Base64.decode("Z3VucwAAAAAAAAAAAAAAAA=="));
+        manager.setCipherKey(Base64.decode("a3dvbmcAAAAAAAAAAAAAAA=="));
         manager.setCookie(rememberMeCookie);
         return manager;
     }
@@ -82,10 +75,27 @@ public class ShiroConfig {
     public SimpleCookie rememberMeCookie() {
         SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
         simpleCookie.setHttpOnly(true);
-        simpleCookie.setMaxAge(7 * 24 * 60 * 60);//7天
+        simpleCookie.setMaxAge(30 * 24 * 60 * 60);//30天
         return simpleCookie;
     }
     
+    /**
+     * 项目自定义session管理器(单机环境)
+     */
+    @Bean
+    public DefaultWebSessionManager defaultWebSessionManager(CacheManager cacheShiroManager) {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setCacheManager(cacheShiroManager);
+        sessionManager.setSessionValidationInterval(120 * 60 * 1000);//验证失效时间120分钟
+        sessionManager.setGlobalSessionTimeout(120 * 60 * 1000);//session失效时间120分钟
+        sessionManager.setDeleteInvalidSessions(true);
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+        Cookie cookie = new SimpleCookie(ShiroHttpSession.DEFAULT_SESSION_ID_NAME);
+        cookie.setName("shiroCookie");
+        cookie.setHttpOnly(true);
+        sessionManager.setSessionIdCookie(cookie);
+        return sessionManager;
+    }
 	
 	/**
 	 * ShiroFilterFactoryBean 处理拦截资源文件问题。
@@ -98,24 +108,27 @@ public class ShiroConfig {
 	 */
 	@Bean
 	public ShiroFilterFactoryBean shirFilter(DefaultWebSecurityManager securityManager) {
-		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 		// 必须设置 SecurityManager
+		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 		shiroFilter.setSecurityManager(securityManager);
-		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
+		//登陆界面
 		shiroFilter.setLoginUrl("/login");
-		// 登录成功后要跳转的链接
-		shiroFilter.setSuccessUrl("/index");
-		// 未授权界面;
+		//登录成功界面
+		shiroFilter.setSuccessUrl("/");
+		//未授权界面，403;
 		shiroFilter.setUnauthorizedUrl("/403");
-		// 拦截器.
+		/**
+		 * 配置shiro拦截器链
+		 * 
+		 * anon  不需要认证
+         * authc 需要认证
+         * user  验证通过或RememberMe登录的都可以
+		 */
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 		// 配置不会被拦截的链接 顺序判断
 		filterChainDefinitionMap.put("/static/**", "anon");
-		filterChainDefinitionMap.put("/ajaxLogin", "anon");
-		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
+		filterChainDefinitionMap.put("/rest/login", "anon");
 		filterChainDefinitionMap.put("/logout", "logout");
-		// <!-- 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
-		// <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
 		filterChainDefinitionMap.put("/**", "authc");
 		shiroFilter.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		System.out.println("Shiro拦截器工厂类注入成功");

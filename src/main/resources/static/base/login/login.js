@@ -41,6 +41,7 @@ define(function(require, exports, module) {
 				window.location.href="/index";
 			},
 			error: function (data) {
+				console.log(data)
 				layer.alert(data.responseJSON.message, {icon: 2})
             } 
 		});

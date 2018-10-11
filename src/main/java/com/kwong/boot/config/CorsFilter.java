@@ -1,4 +1,4 @@
-package com.kwong.boot.config.web;
+package com.kwong.boot.config;
 
 import java.io.IOException;
 
