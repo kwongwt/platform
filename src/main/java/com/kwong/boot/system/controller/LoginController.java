@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kwong.boot.base.tips.SuccessTip;
 import com.kwong.boot.shiro.ShiroKit;
 
 /** 
@@ -24,7 +23,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String empty(Model model) {
-        return "/system/index.html";
+        return "/index.html";
     }
 	
     /**
@@ -32,7 +31,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(Model model) {
-        return "/system/index.html";
+        return "/index.html";
     }
     
 	/**
@@ -73,7 +72,7 @@ public class LoginController extends BaseController {
 	 */
 	@RequestMapping(value = "/rest/login", method = RequestMethod.POST)
 	@ResponseBody
-	public SuccessTip ajaxLoginVail() {
+	public Object ajaxLoginVail() {
 		
 		String username = super.getPara("username").trim();
         String password = super.getPara("password").trim();

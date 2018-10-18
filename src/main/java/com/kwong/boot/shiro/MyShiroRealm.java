@@ -2,16 +2,12 @@ package com.kwong.boot.shiro;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -19,6 +15,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.kwong.boot.shiro.factory.IShiro;
+import com.kwong.boot.shiro.factory.ShiroFactroy;
 import com.kwong.boot.system.model.User;
 import com.kwong.boot.system.repository.UserRepository;
 
@@ -33,25 +31,14 @@ public class MyShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken authcToken) throws AuthenticationException {
-		System.out.println("身份认证方法：MyShiroRealm.doGetAuthenticationInfo()");
+		System.err.println("身份认证方法：MyShiroRealm.doGetAuthenticationInfo()");
+		IShiro shiroFactory = ShiroFactroy.me();
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		User user = null;
-		// 从数据库获取对应用户名密码的用户
-		List<User> userList = userRepository.findByUsernameAndPassword(token.getUsername(),String.valueOf(token.getPassword()));
-		if(userList.size()!=0){
-			user = userList.get(0);
-		}
-		if (null == user) {
-			throw new AccountException("帐号或密码不正确！");
-		}else if(!user.getStatus().equals(1)){
-			throw new DisabledAccountException("帐号已经禁止登录！");
-		}else{
-			System.err.println("登陆成功");
-			//更新登录时间 last login time
-			user.setLastLoginTime(new Date());
-			userRepository.save(user);
-		}
-		return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+		User user = shiroFactory.user(token.getUsername());
+		ShiroUser shiroUser = shiroFactory.shiroUser(user);
+		user.setLastLoginTime(new Date());
+		userRepository.save(user);
+		return shiroFactory.info(shiroUser, user, super.getName());
 	}
 
 	/**
