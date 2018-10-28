@@ -3,7 +3,6 @@ package com.kwong.boot.system.controller;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,22 +16,6 @@ import com.kwong.boot.shiro.ShiroKit;
 */
 @Controller
 public class LoginController extends BaseController {
-	
-    /**
-     * 	跳转到主页
-     */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String empty(Model model) {
-        return "/index.html";
-    }
-	
-    /**
-     * 	跳转到主页
-     */
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index(Model model) {
-        return "/index.html";
-    }
     
 	/**
 	 *  跳转到登陆界面
@@ -64,7 +47,7 @@ public class LoginController extends BaseController {
         }
         currentUser.login(token);
         
-        return REDIRECT + "/";
+        return REDIRECT + "/back/index";
 	}
 	
 	/**

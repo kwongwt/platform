@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>农芯智慧农业管理平台</title>
+<link rel="stylesheet" type="text/css" th:href="@{/static/sea-modules/plugins/layui/css/layui.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/static/platform/platform.css}">
+<link th:replace="base::html">
+</head>
+<body>
+	<header>
+		<h1 class="title">农芯智慧农业管理平台</h1>
+		<h3 class="second-title">Big Data Analytics</h3>
+	</header>
+	<section id="area-seleter">
+		<form class="layui-form">
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>梅江区</option>
+						<option value="0">长沙镇</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>梅县区</option>
+						<option value="0">松口镇</option>
+						<option value="1">海口镇</option>
+						<option value="2">雁洋镇</option>
+						<option value="3">白渡镇</option>
+						<option value="4">桃尧镇</option>
+						<option value="5">丙村镇</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>蕉岭县</option>
+						<option value="0">高思镇</option>
+						<option value="1">文福镇</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>丰顺县</option>
+						<option value="0">龙岗镇</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>平远县</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>兴宁县</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>五华县</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<select>
+						<option value="" disabled selected>大埔县</option>
+					</select>
+				</div>
+			</div>
+		</form>
+	</section>
+	<section id="message-box">
+		<div class="message-box-left">
+			<div class="layui-card k-card">
+				<div class="layui-card-header">基础信息<span>Basic Information</span></div>
+				<div class="layui-card-body">
+					<div class="message">
+						<span class="message-title">所在地区：</span>
+						<span class="message-number">所属地区</span>
+					</div>
+					<div class="message">
+						<span class="message-title">基地/企业：</span>
+						<span class="message-number">基地/企业名称</span>
+					</div>
+					<div class="message">
+						<span class="message-title">地理位置：</span>
+						<span class="message-number">详细地址</span>
+					</div>
+					<div class="message">
+						<span class="message-title">主要品种：</span>
+						<span class="message-number">作物品种</span>
+					</div>
+					<div class="message">
+						<span class="message-title">基地面积（亩）：</span>
+						<span class="message-number">种植面积</span>
+					</div>
+					<div class="message">
+						<span class="message-title">产量（吨）：</span>
+						<span class="message-number">种植产量</span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-card k-card">
+				<div class="layui-card-header">土壤初始数据<span>Initial Data</span></div>
+				<div class="layui-card-body">
+					<div class="message">
+						<span class="message-title">所在地区：</span>
+						<span class="message-number">所属地区</span>
+					</div>
+					<div class="message">
+						<span class="message-title">基地/企业：</span>
+						<span class="message-number">基地/企业名称</span>
+					</div>
+					<div class="message">
+						<span class="message-title">地理位置：</span>
+						<span class="message-number">详细地址</span>
+					</div>
+					<div class="message">
+						<span class="message-title">主要品种：</span>
+						<span class="message-number">作物品种</span>
+					</div>
+					<div class="message">
+						<span class="message-title">基地面积（亩）：</span>
+						<span class="message-number">种植面积</span>
+					</div>
+					<div class="message">
+						<span class="message-title">产量（吨）：</span>
+						<span class="message-number">种植产量</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="message-box-middle">
+			<div id="map"></div>
+		</div>
+		<div class="message-box-right">
+			<div id="anticipation" class="layui-card k-card">
+				<div class="layui-card-header">预期目标<span>Anticipation</span></div>
+				<div class="layui-card-body">
+					<div class="message">
+						<span class="message-title">有机质</span>
+						<span class="message-number">1% / 年</span>
+					</div>
+					<div class="message">
+						<span class="message-title">化肥减量</span>
+						<span class="message-number red-number">-15% / 年</span>
+					</div>
+					<div class="message">
+						<span class="message-title">每亩增收</span>
+						<span class="message-number">1100元 - 1500元</span>
+					</div>
+					<div class="message">
+						<span class="message-title">服务面积</span>
+						<span class="message-number">10万亩</span>
+					</div>
+					<div class="message">
+						<span class="message-title">消纳有机质资源</span>
+						<span class="message-number">30万吨 / 年</span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-card k-card">
+				<div class="layui-card-header">有机肥品质<span>Data Comparison</span></div>
+				<div class="layui-card-body">
+					<div class="message">
+						<span class="message-title">所在地区：</span>
+						<span class="message-number">所属地区</span>
+					</div>
+					<div class="message">
+						<span class="message-title">基地/企业：</span>
+						<span class="message-number">基地/企业名称</span>
+					</div>
+					<div class="message">
+						<span class="message-title">地理位置：</span>
+						<span class="message-number">详细地址</span>
+					</div>
+					<div class="message">
+						<span class="message-title">主要品种：</span>
+						<span class="message-number">作物品种</span>
+					</div>
+					<div class="message">
+						<span class="message-title">基地面积（亩）：</span>
+						<span class="message-number">种植面积</span>
+					</div>
+					<div class="message">
+						<span class="message-title">产量（吨）：</span>
+						<span class="message-number">种植产量</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<script th:src="@{/static/sea-modules/plugins/jquery-2.1.4/jquery-2.1.4.js}"></script>
+<script th:src="@{/static/sea-modules/plugins/echarts/echarts.js}"></script>
+<script th:src="@{/static/sea-modules/plugins/map-data/china.js}"></script>
+<script th:src="@{/static/sea-modules/plugins/layui/layui.all.js}"></script>
+<script th:src="@{/static/platform/platform.js}"></script>
+</body>
+</html>
