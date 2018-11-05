@@ -46,7 +46,8 @@ header .second-title{
 	margin-bottom:40px;
 }
 #message-box{
-	float:left;
+	width:1700px;
+	margin:0 auto;
 }
 .message .message-title{
 	color:#f0fd02;
@@ -70,8 +71,8 @@ header .second-title{
 	float:left;
 }
 #map{
-	width:800px;
-	height:500px;
+	min-width:1000px;
+	min-height:800px;
 }
 #anticipation .layui-card-body{
 	clear: both;
